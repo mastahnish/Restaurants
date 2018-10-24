@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import pl.myosolutions.restaurants.R;
 import pl.myosolutions.restaurants.databinding.ActivityMainBinding;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements CustomersAdapter.
     }
 
     private void initViews() {
-        getSupportActionBar().setTitle(R.string.choose_customer);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.choose_customer);
         binding.swipeRefresh.setOnRefreshListener(() -> viewModel.getCustomers(true));
 
     }
@@ -67,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements CustomersAdapter.
 
         final Observer<List<Customer>> customersObserver =
                 customerEntities -> {
-                    Log.d("tag", "customersObserver trigger, customers: " + customerEntities.toString());
                     if(binding.swipeRefresh.isRefreshing()) binding.swipeRefresh.setRefreshing(false);
 
                     customersData.clear();
@@ -83,11 +83,15 @@ public class MainActivity extends AppCompatActivity implements CustomersAdapter.
                 };
 
 
-        final Observer<String> notificationObserver =
+        final Observer<Integer> notificationObserver =
                 notification -> {
-                    if (!TextUtils.isEmpty(notification)) {
-                        Snackbar.make(binding.getRoot(), notification, Snackbar.LENGTH_SHORT).show();
+                    if(notification!=null){
+                        String name = getResources().getResourceName(notification);
+                        if (name == null || !name.startsWith(getApplicationContext().getPackageName() + ":id/")) {
+                            Snackbar.make(binding.getRoot(), getString(notification), Snackbar.LENGTH_SHORT).show();
+                        }
                     }
+
 
                     if(binding.swipeRefresh.isRefreshing()) binding.swipeRefresh.setRefreshing(false);
                 };
@@ -117,18 +121,14 @@ public class MainActivity extends AppCompatActivity implements CustomersAdapter.
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                viewModel.processQuery(query).observe(MainActivity.this, customers -> {
-                    adapter.updateData(customers);
-                });
+                viewModel.processQuery(query).observe(MainActivity.this, customers -> adapter.updateData(customers));
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                viewModel.processQuery(newText).observe(MainActivity.this, customers -> {
-                    adapter.updateData(customers);
-                });
+                viewModel.processQuery(newText).observe(MainActivity.this, customers -> adapter.updateData(customers));
                 return true;
             }
         });

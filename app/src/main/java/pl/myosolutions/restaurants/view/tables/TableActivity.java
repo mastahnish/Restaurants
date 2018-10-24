@@ -11,8 +11,10 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.List;
+import java.util.Objects;
 
 import pl.myosolutions.restaurants.R;
 import pl.myosolutions.restaurants.databinding.ActivityTableBinding;
@@ -34,7 +36,7 @@ public class TableActivity extends AppCompatActivity implements TablesAdapter.On
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_table);
         setSupportActionBar(binding.tooblar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         getExtras();
@@ -47,7 +49,11 @@ public class TableActivity extends AppCompatActivity implements TablesAdapter.On
     private void updateToolbar() {
 
         viewModel.mCurrentCustomer.observe(this, customer ->
-                binding.tooblar.setTitle(String.format(getString(R.string.choose_table),customer.getCustomerFirstName(), customer.getCustomerLastName())));
+        {
+            if (customer != null) {
+                binding.tooblar.setTitle(String.format(getString(R.string.choose_table), customer.getCustomerFirstName(), customer.getCustomerLastName()));
+            }
+        });
     }
 
     private void initViewModel() {
@@ -70,10 +76,13 @@ public class TableActivity extends AppCompatActivity implements TablesAdapter.On
 
                 };
 
-        final Observer<String> notificationObserver =
+        final Observer<Integer> notificationObserver =
                 notification -> {
-                    if (!TextUtils.isEmpty(notification)) {
-                        Snackbar.make(binding.getRoot(), notification, Snackbar.LENGTH_SHORT).show();
+                    if(notification!=null){
+                        String name = getResources().getResourceName(notification);
+                        if (name == null || !name.startsWith(getApplicationContext().getPackageName() + ":id/")) {
+                            Snackbar.make(binding.getRoot(), getString(notification), Snackbar.LENGTH_SHORT).show();
+                        }
                     }
                 };
 

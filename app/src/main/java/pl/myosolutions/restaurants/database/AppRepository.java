@@ -42,7 +42,7 @@ public class AppRepository {
         return instance;
     }
 
-    public AppRepository(Context ctx) {
+    private AppRepository(Context ctx) {
         mDb = AppDatabase.getInstance(ctx);
         mCustomers = getAllCustomers();
         mTables = getAllTables();
@@ -141,15 +141,15 @@ public class AppRepository {
         return mDb.customerDao().getCustomerById(customerId);
     }
 
-    public LiveData<List<Reservation>> getAllReservations() {
+    private LiveData<List<Reservation>> getAllReservations() {
         return mDb.reservationDao().getAll();
     }
 
-    public void insertAllCustomers(final List<Customer> customers) {
+    private void insertAllCustomers(final List<Customer> customers) {
         executor.execute(() -> mDb.customerDao().insertAll(customers));
     }
 
-    public void insertTables(List<Table> tables) {
+    private void insertTables(List<Table> tables) {
         executor.execute(() -> mDb.tableDao().insertAll(tables));
     }
 

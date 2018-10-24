@@ -4,8 +4,6 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.content.Context;
-import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 
 import java.util.List;
@@ -18,23 +16,23 @@ import pl.myosolutions.restaurants.utils.NetworkUtils;
 public class CustomersViewModel extends AndroidViewModel {
 
     public LiveData<List<Customer>> mCustomers;
+    public MutableLiveData<Integer> notification = new MutableLiveData<>();
+
     private AppRepository mRepository;
-    public MutableLiveData<String> notification = new MutableLiveData<>();
-    private Context context;
+    private NetworkUtils networkUtils;
 
     public CustomersViewModel(@NonNull Application application) {
         super(application);
-
-        this.context = application.getApplicationContext();
-        mRepository = AppRepository.getInstance(context);
+        mRepository = AppRepository.getInstance(application.getApplicationContext());
+        networkUtils = NetworkUtils.getInstance(application.getApplicationContext());
         mCustomers = mRepository.mCustomers;
     }
 
     public void getCustomers(boolean isForceUpdate){
-        boolean isOnline = NetworkUtils.isConnected(context);
+        boolean isOnline = networkUtils.isConnected();
 
         if(isForceUpdate && !isOnline){
-            notification.setValue(context.getString(R.string.no_internet));
+            notification.setValue(R.string.no_internet);
         }
 
         mRepository.getCustomers(isOnline, isForceUpdate);

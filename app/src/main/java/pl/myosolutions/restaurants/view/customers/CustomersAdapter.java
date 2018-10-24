@@ -18,12 +18,12 @@ public class CustomersAdapter extends RecyclerView.Adapter {
     private List<Customer> customers;
     private OnCustomerClickListener onCustomerClickListener;
 
-    public CustomersAdapter(List<Customer> data, OnCustomerClickListener listener) {
+    CustomersAdapter(List<Customer> data, OnCustomerClickListener listener) {
         this.customers = data;
         this.onCustomerClickListener = listener;
     }
 
-    public void updateData(List<Customer> data){
+    void updateData(List<Customer> data){
         if(data!=null){
             customers = data;
             notifyDataSetChanged();
@@ -46,7 +46,7 @@ public class CustomersAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public Customer getCustomerAtPosition(int position){
+    Customer getCustomerAtPosition(int position){
         return customers.get(position);
     }
 
@@ -55,20 +55,21 @@ public class CustomersAdapter extends RecyclerView.Adapter {
         return customers.size();
     }
 
-    public ViewDataBinding getLayout(ViewGroup parent){
+    private ViewDataBinding getLayout(ViewGroup parent){
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        CustomerListItemBinding binding = CustomerListItemBinding.inflate(inflater, parent, false);
-        return binding;
+        return CustomerListItemBinding.inflate(inflater, parent, false);
     }
 
     class CustomersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private CustomerListItemBinding binding;
 
-        public CustomersViewHolder(View itemView) {
+        CustomersViewHolder(View itemView) {
             super(itemView);
             this.binding = DataBindingUtil.bind(itemView);
-            this.binding.getRoot().setOnClickListener(this);
+            if (this.binding != null) {
+                this.binding.getRoot().setOnClickListener(this);
+            }
         }
 
 

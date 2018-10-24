@@ -21,8 +21,7 @@ public class HttpServiceFactory {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
-        T service = retrofit.create(clazz);
 
-        return service;
+        return retrofit.create(clazz);
     }
 }

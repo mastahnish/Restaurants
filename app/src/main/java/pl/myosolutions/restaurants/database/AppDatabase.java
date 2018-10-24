@@ -11,7 +11,7 @@ import pl.myosolutions.restaurants.entities.Table;
 
 @Database(entities = {Customer.class, Table.class, Reservation.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
-    public static final String DATABASE_NAME = "AppDatabase.db";
+    private static final String DATABASE_NAME = "AppDatabase.db";
     private static volatile AppDatabase instance;
     private static final Object LOCK = new Object();
 
@@ -19,7 +19,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract TableDao tableDao();
     public abstract ReservationDao reservationDao();
 
-    public static AppDatabase getInstance(Context context) {
+    static AppDatabase getInstance(Context context) {
         if (instance == null) {
             synchronized (LOCK) {
                 if (instance == null) {

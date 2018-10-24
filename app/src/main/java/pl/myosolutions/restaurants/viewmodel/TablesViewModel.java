@@ -4,7 +4,6 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -22,17 +21,16 @@ public class TablesViewModel extends AndroidViewModel {
     private static final String TAG = TablesViewModel.class.getSimpleName();
     public LiveData<List<Table>> mTables;
     public LiveData<List<Reservation>> mReservations;
-    public MutableLiveData<String> notification = new MutableLiveData<>();
+    public MutableLiveData<Integer> notification = new MutableLiveData<>();
     public LiveData<Customer> mCurrentCustomer;
     private AppRepository mRepository;
-    private Context context;
+    private NetworkUtils networkUtils;
     private int customerId;
 
     public TablesViewModel(@NonNull Application application) {
         super(application);
-
-        this.context = application.getApplicationContext();
-        mRepository = AppRepository.getInstance(context);
+        mRepository = AppRepository.getInstance(application.getApplicationContext());
+        networkUtils = NetworkUtils.getInstance(application.getApplicationContext());
         mTables = mRepository.mTables;
         mReservations = mRepository.mReservations;
     }
@@ -40,7 +38,7 @@ public class TablesViewModel extends AndroidViewModel {
 
     public void getTables() {
         Log.d(TAG, "getTables");
-        mRepository.getTables(NetworkUtils.isConnected(context));
+        mRepository.getTables(networkUtils.isConnected());
     }
 
     public void onTableClicked(Table table) {
@@ -48,14 +46,14 @@ public class TablesViewModel extends AndroidViewModel {
 
         if (table.isVacant()) {
             mRepository.insertReservation(new Reservation(customerId, tableId));
-            notification.setValue(context.getString(R.string.booking_table) + tableId);
+            notification.setValue(R.string.reservation_success);
 
         } else if (table.getCustomerId() == customerId) {
             mRepository.deleteReservation(tableId);
-            notification.setValue(context.getString(R.string.reservation_cancelled));
+            notification.setValue(R.string.reservation_cancelled);
 
         } else {
-            notification.setValue(context.getString(R.string.table_not_vacant));
+            notification.setValue(R.string.table_not_vacant);
         }
 
 
