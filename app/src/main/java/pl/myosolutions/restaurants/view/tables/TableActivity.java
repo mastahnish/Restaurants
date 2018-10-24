@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -22,6 +23,7 @@ import pl.myosolutions.restaurants.databinding.ActivityTableBinding;
 import pl.myosolutions.restaurants.entities.Customer;
 import pl.myosolutions.restaurants.entities.Reservation;
 import pl.myosolutions.restaurants.entities.Table;
+import pl.myosolutions.restaurants.utils.DiffUtilCallback;
 import pl.myosolutions.restaurants.view.customers.CustomersAdapter;
 import pl.myosolutions.restaurants.view.customers.MainActivity;
 import pl.myosolutions.restaurants.viewmodel.CustomersViewModel;
@@ -35,7 +37,6 @@ public class TableActivity extends AppCompatActivity implements TablesAdapter.On
     private ActivityTableBinding binding;
     private TablesViewModel viewModel;
     private TablesAdapter adapter;
-    private List<Table> tablesData = new ArrayList<>();
     private int customerId;
 
     @Override
@@ -68,16 +69,13 @@ public class TableActivity extends AppCompatActivity implements TablesAdapter.On
 
         final Observer<List<Table>> tableObserver =
                 tableEntities -> {
-                    Log.d(TAG, "TEST_NOW tableObserver: " + tableEntities.toString());
-                    tablesData.clear();
-                    tablesData.addAll(tableEntities);
 
                     if (adapter == null) {
-                        adapter = new TablesAdapter(customerId, tablesData,
+                        adapter = new TablesAdapter(customerId, tableEntities,
                                 TableActivity.this);
                         binding.tableList.setAdapter(adapter);
                     } else {
-                        adapter.notifyDataSetChanged();
+                        adapter.updateItems(tableEntities);
                     }
 
                 };

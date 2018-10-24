@@ -20,6 +20,9 @@ public interface TableDao {
     @Query("SELECT * FROM tables")
     LiveData<List<Table>> getAll();
 
+    @Query("SELECT * FROM tables WHERE id =:tableId")
+    Table getTableById(int tableId);
+
     @Query("SELECT COUNT(*) FROM tables")
     int getCount();
 

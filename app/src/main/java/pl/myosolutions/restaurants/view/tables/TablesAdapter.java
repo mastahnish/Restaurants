@@ -1,7 +1,9 @@
 package pl.myosolutions.restaurants.view.tables;
 
 import android.databinding.DataBindingUtil;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import java.util.List;
 
 import pl.myosolutions.restaurants.databinding.TableListItemBinding;
 import pl.myosolutions.restaurants.entities.Table;
+import pl.myosolutions.restaurants.utils.DiffUtilCallback;
 
 public class TablesAdapter extends RecyclerView.Adapter {
 
@@ -24,9 +27,16 @@ public class TablesAdapter extends RecyclerView.Adapter {
         this.onTableClickListener = listener;
     }
 
+    public void updateItems(List<Table> newTables) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtilCallback(tables, newTables));
+        diffResult.dispatchUpdatesTo(this);
 
-    @NonNull
-    @Override
+        tables.clear();
+        tables.addAll(newTables);
+    }
+
+
+
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         TableListItemBinding binding = TableListItemBinding.inflate(inflater, parent, false);
@@ -34,13 +44,49 @@ public class TablesAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-        TablesAdapter.TableViewHolder holder = (TablesAdapter.TableViewHolder) viewHolder;
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        TablesAdapter.TableViewHolder viewHolder = (TablesAdapter.TableViewHolder) holder;
         if (tables != null && tables.size() > 0) {
-            holder.binding.setTable(tables.get(position));
-            holder.binding.setCustomerId(customerId);
+            viewHolder.binding.setTable(tables.get(position));
+            viewHolder.binding.setCustomerId(customerId);
         }
     }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position, @NonNull List payloads) {
+        super.onBindViewHolder(viewHolder, position, payloads);
+
+        if (payloads.isEmpty()) {
+            onBindViewHolder(viewHolder, position);
+            return;
+        }
+
+        Bundle bundle = (Bundle) payloads.get(0);
+        TablesAdapter.TableViewHolder holder = (TablesAdapter.TableViewHolder) viewHolder;
+
+        Table table = tables.get(position);
+        holder.binding.setCustomerId(customerId);
+
+        int newCustomerId = bundle.getInt(DiffUtilCallback.CUSTOMER_ID_CHANGE_KEY);
+        if (newCustomerId > -1) {
+            table.setCustomerId(newCustomerId);
+        }
+
+        boolean newIsVacant = bundle.getBoolean(DiffUtilCallback.IS_VACANT_FLAG_CHANGED_KEY);
+        if (newIsVacant) {
+            table.setVacant(newIsVacant);
+        }
+
+        holder.binding.setTable(table);
+
+    }
+
+
+    public Table getTableAtPosition(int position){
+        return tables.get(position);
+    }
+
+
 
     @Override
     public int getItemCount() {

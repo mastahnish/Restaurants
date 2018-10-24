@@ -19,15 +19,21 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
 
     dataBinding {
         enabled = true
     }
+
     compileOptions {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
+
 }
 
 dependencies {
@@ -59,4 +65,15 @@ dependencies {
     //Architecture Components
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
+
+    //testing
+    testImplementation 'com.squareup.assertj:assertj-android:1.1.0'
+    testImplementation 'org.robolectric:robolectric:3.0'
+    testImplementation('org.robolectric:shadows-support-v4:3.0') {
+        exclude module: 'support-v4'
+    }
+    testImplementation 'org.mockito:mockito-all:1.10.19'
+    testImplementation 'net.javacrumbs.json-unit:json-unit-fluent:1.5.6'
+    testImplementation 'com.squareup.assertj:assertj-android-recyclerview-v7:1.1.0@aar'
+
 }

@@ -1,6 +1,7 @@
 package pl.myosolutions.restaurants.view.customers;
 
 import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,9 +36,8 @@ public class CustomersAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        CustomerListItemBinding binding = CustomerListItemBinding.inflate(inflater, parent, false);
-        return new CustomersViewHolder(binding.getRoot());
+        View view = getLayout(parent).getRoot();
+        return new CustomersViewHolder(view);
     }
 
     @Override
@@ -48,9 +48,19 @@ public class CustomersAdapter extends RecyclerView.Adapter {
         }
     }
 
+    public Customer getCustomerAtPosition(int position){
+        return customers.get(position);
+    }
+
     @Override
     public int getItemCount() {
         return customers.size();
+    }
+
+    public ViewDataBinding getLayout(ViewGroup parent){
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        CustomerListItemBinding binding = CustomerListItemBinding.inflate(inflater, parent, false);
+        return binding;
     }
 
     class CustomersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

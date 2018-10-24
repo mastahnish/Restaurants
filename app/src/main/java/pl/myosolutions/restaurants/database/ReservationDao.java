@@ -25,4 +25,8 @@ public interface ReservationDao {
     @Query("DELETE FROM reservations")
     int deleteAll();
 
+    @Query("SELECT COUNT(*) FROM reservations")
+    int getCount();
+
+
 }
