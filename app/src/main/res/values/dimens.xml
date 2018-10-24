@@ -1,0 +1,8 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="margin">16dp</dimen>
+    <dimen name="text_size">16sp</dimen>
+    <dimen name="customer_details_text_size">24sp</dimen>
+    <dimen name="customer_margin">10dp</dimen>
+    <dimen name="table_grid_item_height">60dp</dimen>
+</resources>

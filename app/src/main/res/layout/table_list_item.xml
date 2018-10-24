@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <data>
+
+            <import type="java.lang.String" />
+
+            <variable
+                name="customerId"
+                type="int" />
+            <variable
+                name="table"
+                type="pl.myosolutions.restaurants.entities.Table" />
+        </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/table_grid_item_height"
+        android:layout_margin="@dimen/customer_margin"
+        android:background='@{table.vacant ? @color/colorPrimary :(table.customerId == customerId ?  @color/colorAccent  : @color/grey_light)}'
+        android:orientation="vertical">
+
+
+
+        <TextView
+            android:id="@+id/table_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor='@{table.vacant ? @color/grey_light: @color/grey_dark }'
+            android:text="@{String.valueOf(table.id)}"
+            android:textSize="@dimen/customer_details_text_size"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</layout>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Restaurants</string>
+    <string name="choose_customer">Choose customer</string>
+    <string name="choose_table">Choose table for %s %s</string>
+    <string name="table_not_vacant">This table is not vacant</string>
+    <string name="booking_table">You booked table no.</string>
+    <string name="reservation_cancelled">Reservation cancelled</string>
+    <string name="have_reservation">R</string>
+</resources>
