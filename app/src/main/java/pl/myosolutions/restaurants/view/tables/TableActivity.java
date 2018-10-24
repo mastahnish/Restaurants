@@ -5,34 +5,24 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
-import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pl.myosolutions.restaurants.R;
 import pl.myosolutions.restaurants.databinding.ActivityTableBinding;
-import pl.myosolutions.restaurants.entities.Customer;
 import pl.myosolutions.restaurants.entities.Reservation;
 import pl.myosolutions.restaurants.entities.Table;
-import pl.myosolutions.restaurants.utils.DiffUtilCallback;
-import pl.myosolutions.restaurants.view.customers.CustomersAdapter;
-import pl.myosolutions.restaurants.view.customers.MainActivity;
-import pl.myosolutions.restaurants.viewmodel.CustomersViewModel;
 import pl.myosolutions.restaurants.viewmodel.TablesViewModel;
 
 public class TableActivity extends AppCompatActivity implements TablesAdapter.OnTableClickListener {
 
     public static final String CUSTOMER_ID = "CUSTOMER_ID";
-    private static final String TAG = TableActivity.class.getSimpleName();
 
     private ActivityTableBinding binding;
     private TablesViewModel viewModel;

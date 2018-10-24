@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.myosolutions.restaurants.entities.Customer;
-import pl.myosolutions.restaurants.entities.Reservation;
 import pl.myosolutions.restaurants.entities.Table;
 
 public class SampleData {

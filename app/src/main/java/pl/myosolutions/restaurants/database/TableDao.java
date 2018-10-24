@@ -6,7 +6,6 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-
 import java.util.List;
 
 import pl.myosolutions.restaurants.entities.Table;

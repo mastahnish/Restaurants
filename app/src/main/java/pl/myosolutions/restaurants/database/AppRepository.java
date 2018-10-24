@@ -93,8 +93,6 @@ public class AppRepository {
     public void getTables(boolean isOnline) {
         if (isOnline && mDb.tableDao().getCount() == 0) {
 
-            Log.d(TAG, "getTables fetching data from server");
-
             RestaurantService service = HttpServiceFactory.createRetrofitService(RestaurantService.class, RestaurantAPI.API_BASE_URL);
 
             service.getTables()
@@ -108,7 +106,6 @@ public class AppRepository {
 
                         @Override
                         public void onNext(List<Boolean> booleans) {
-                            Log.d(TAG, "onNext: " + booleans.toString());
                             List<Table> tables = new ArrayList<>();
                             for (int i = 0; i < booleans.size(); i++) {
                                 tables.add(new Table(i + 1, booleans.get(i)));
@@ -128,7 +125,6 @@ public class AppRepository {
                         }
                     });
         } else {
-            Log.d(TAG, "getTables fetching data from cache");
             getAllTables();
         }
     }
