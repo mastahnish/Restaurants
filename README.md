@@ -1,5 +1,10 @@
 # Restaurants
-Recruitment task
+Case study for practising:
+* MVVM
+* Android Architecture Components
+* Alarm Manager
+* Room Library
+* RxJava2 + Retrofit2
 
 Workflow:
 
