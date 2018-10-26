@@ -34,6 +34,9 @@ public interface ReservationDao {
     @Query("UPDATE reservations SET isCancelled =:isCancelled WHERE tableId =:tableId AND customerId =:customerId")
     int updateReservation(int customerId, int tableId, boolean isCancelled);
 
+    @Query("SELECT * FROM reservations WHERE isCancelled=:isCancelled")
+    List<Reservation> getReservationsToReset(boolean isCancelled);
+
     @Query("SELECT COUNT(*) FROM reservations")
     int getCount();
 

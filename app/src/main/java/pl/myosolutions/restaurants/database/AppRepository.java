@@ -28,7 +28,6 @@ public class AppRepository {
     private static AppRepository instance;
 
     public LiveData<List<Customer>> mCustomers;
-    public LiveData<List<Reservation>> mReservations;
     public LiveData<List<Table>> mTables;
     private AppDatabase mDb;
     private Executor executor = Executors.newSingleThreadExecutor();
@@ -46,7 +45,6 @@ public class AppRepository {
         mDb = AppDatabase.getInstance(ctx);
         mCustomers = getAllCustomers();
         mTables = getAllTables();
-        mReservations = getAllReservations();
     }
 
     public void getCustomers(boolean isOnline) {
@@ -134,10 +132,6 @@ public class AppRepository {
         return mDb.customerDao().getCustomerById(customerId);
     }
 
-    private LiveData<List<Reservation>> getAllReservations() {
-        return mDb.reservationDao().getAll();
-    }
-
     private void insertAllCustomers(final List<Customer> customers) {
         executor.execute(() -> mDb.customerDao().insertAll(customers));
     }
@@ -147,7 +141,20 @@ public class AppRepository {
     }
 
     public void resetReservations() {
-        executor.execute(() -> mDb.reservationDao().updateAllReservations(true));
+        executor.execute(() -> {
+            mDb.runInTransaction(() -> {
+                List<Reservation> reservationsToReset = mDb.reservationDao().getReservationsToReset(false);
+
+                if(reservationsToReset!=null){
+                    for(Reservation reservation : reservationsToReset){
+                        mDb.reservationDao().updateReservation(reservation.getCustomerId(), reservation.getTableId(), true);
+                        mDb.tableDao().updateTable(reservation.getTableId(), true, -1);
+                    }
+                }
+            });
+
+
+        });
     }
 
     public void insertReservation(Reservation reservation) {

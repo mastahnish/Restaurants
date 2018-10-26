@@ -19,7 +19,6 @@ public class TablesViewModel extends AndroidViewModel {
 
     private static final String TAG = TablesViewModel.class.getSimpleName();
     public LiveData<List<Table>> mTables;
-    public LiveData<List<Reservation>> mReservations;
     public MutableLiveData<Integer> notification = new MutableLiveData<>();
     public LiveData<Customer> mCurrentCustomer;
     private AppRepository mRepository;
@@ -31,7 +30,6 @@ public class TablesViewModel extends AndroidViewModel {
         mRepository = AppRepository.getInstance(application.getApplicationContext());
         networkUtils = NetworkUtils.getInstance(application.getApplicationContext());
         mTables = mRepository.mTables;
-        mReservations = mRepository.mReservations;
     }
 
 
@@ -62,9 +60,5 @@ public class TablesViewModel extends AndroidViewModel {
     public void setCustomerId(int id) {
         customerId = id;
         mCurrentCustomer = mRepository.getCustomerById(id);
-    }
-
-    public void updateTable(int tableId, boolean isVacant, int customerId) {
-        mRepository.updateTable(tableId, isVacant, customerId);
     }
 }

@@ -16,7 +16,6 @@ import java.util.Objects;
 
 import pl.myosolutions.restaurants.R;
 import pl.myosolutions.restaurants.databinding.ActivityTableBinding;
-import pl.myosolutions.restaurants.entities.Reservation;
 import pl.myosolutions.restaurants.entities.Table;
 import pl.myosolutions.restaurants.viewmodel.TablesViewModel;
 
@@ -56,17 +55,6 @@ public class TableActivity extends AppCompatActivity implements TablesAdapter.On
 
     private void initViewModel() {
 
-        final Observer<List<Reservation>> reservationsObserver =
-                reservations -> {
-                    if (reservations != null) {
-                        for (Reservation reservation : reservations){
-                            if(reservation.isCancelled()){
-                               viewModel.updateTable(reservation.getTableId(), true, -1);
-                            }
-                        }
-                    }
-                };
-
         final Observer<List<Table>> tableObserver =
                 tableEntities -> {
 
@@ -97,7 +85,6 @@ public class TableActivity extends AppCompatActivity implements TablesAdapter.On
 
         viewModel.mTables.observe(this, tableObserver);
         viewModel.notification.observe(this, notificationObserver);
-        viewModel.mReservations.observe(this, reservationsObserver);
 
         viewModel.setCustomerId(customerId);
     }
