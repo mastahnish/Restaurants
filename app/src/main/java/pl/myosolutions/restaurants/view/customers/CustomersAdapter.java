@@ -3,6 +3,7 @@ package pl.myosolutions.restaurants.view.customers;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import pl.myosolutions.restaurants.databinding.CustomerListItemBinding;
 import pl.myosolutions.restaurants.entities.Customer;
+import pl.myosolutions.restaurants.utils.CustomerDiffUtilCallback;
 
 public class CustomersAdapter extends RecyclerView.Adapter {
 
@@ -23,11 +25,12 @@ public class CustomersAdapter extends RecyclerView.Adapter {
         this.onCustomerClickListener = listener;
     }
 
-    void updateData(List<Customer> data){
-        if(data!=null){
-            customers = data;
-            notifyDataSetChanged();
-        }
+    void updateData(List<Customer> newCustomers){
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new CustomerDiffUtilCallback(customers, newCustomers));
+            diffResult.dispatchUpdatesTo(this);
+
+            customers.clear();
+            customers.addAll(newCustomers);
     }
 
 

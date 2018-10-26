@@ -68,14 +68,12 @@ public class MainActivity extends AppCompatActivity implements CustomersAdapter.
                 customerEntities -> {
                     if(binding.swipeRefresh.isRefreshing()) binding.swipeRefresh.setRefreshing(false);
 
-                    customersData.clear();
-                    customersData.addAll(customerEntities);
                     if (adapter == null) {
                         adapter = new CustomersAdapter(customersData,
                                 MainActivity.this);
                         binding.customersList.setAdapter(adapter);
                     } else {
-                        adapter.notifyDataSetChanged();
+                        adapter.updateData(customerEntities);
                     }
 
                 };

@@ -13,7 +13,7 @@ import java.util.List;
 
 import pl.myosolutions.restaurants.databinding.TableListItemBinding;
 import pl.myosolutions.restaurants.entities.Table;
-import pl.myosolutions.restaurants.utils.DiffUtilCallback;
+import pl.myosolutions.restaurants.utils.TableDiffUtilCallback;
 
 public class TablesAdapter extends RecyclerView.Adapter {
 
@@ -21,22 +21,22 @@ public class TablesAdapter extends RecyclerView.Adapter {
     private TablesAdapter.OnTableClickListener onTableClickListener;
     private int customerId;
 
-    public TablesAdapter(int customerId, List<Table> data, TablesAdapter.OnTableClickListener listener) {
+    TablesAdapter(int customerId, List<Table> data, TablesAdapter.OnTableClickListener listener) {
         this.customerId = customerId;
         this.tables = data;
         this.onTableClickListener = listener;
     }
 
-    public void updateItems(List<Table> newTables) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtilCallback(tables, newTables));
-        diffResult.dispatchUpdatesTo(this);
+    void updateItems(List<Table> newTables) {
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new TableDiffUtilCallback(tables, newTables));
+            diffResult.dispatchUpdatesTo(this);
 
-        tables.clear();
-        tables.addAll(newTables);
+            tables.clear();
+            tables.addAll(newTables);
     }
 
 
-
+    @NonNull
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         TableListItemBinding binding = TableListItemBinding.inflate(inflater, parent, false);
@@ -67,12 +67,12 @@ public class TablesAdapter extends RecyclerView.Adapter {
         Table table = tables.get(position);
         holder.binding.setCustomerId(customerId);
 
-        int newCustomerId = bundle.getInt(DiffUtilCallback.CUSTOMER_ID_CHANGE_KEY);
+        int newCustomerId = bundle.getInt(TableDiffUtilCallback.CUSTOMER_ID_CHANGE_KEY);
         if (newCustomerId > -1) {
             table.setCustomerId(newCustomerId);
         }
 
-        boolean newIsVacant = bundle.getBoolean(DiffUtilCallback.IS_VACANT_FLAG_CHANGED_KEY);
+        boolean newIsVacant = bundle.getBoolean(TableDiffUtilCallback.IS_VACANT_FLAG_CHANGED_KEY);
         if (newIsVacant) {
             table.setVacant(newIsVacant);
         }
@@ -82,10 +82,9 @@ public class TablesAdapter extends RecyclerView.Adapter {
     }
 
 
-    public Table getTableAtPosition(int position){
+    Table getTableAtPosition(int position) {
         return tables.get(position);
     }
-
 
 
     @Override
@@ -97,10 +96,12 @@ public class TablesAdapter extends RecyclerView.Adapter {
 
         private TableListItemBinding binding;
 
-        public TableViewHolder(View itemView) {
+        TableViewHolder(View itemView) {
             super(itemView);
             this.binding = DataBindingUtil.bind(itemView);
-            this.binding.getRoot().setOnClickListener(this);
+            if (this.binding != null) {
+                this.binding.getRoot().setOnClickListener(this);
+            }
         }
 
         @Override

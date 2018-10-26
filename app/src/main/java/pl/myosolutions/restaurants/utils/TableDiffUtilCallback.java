@@ -8,7 +8,7 @@ import java.util.List;
 
 import pl.myosolutions.restaurants.entities.Table;
 
-public class DiffUtilCallback extends DiffUtil.Callback {
+public class TableDiffUtilCallback extends DiffUtil.Callback {
 
     public static final String CUSTOMER_ID_CHANGE_KEY = "CUSTOMER_ID_CHANGE";
     public static final String IS_VACANT_FLAG_CHANGED_KEY = "IS_VACANT_FLAG_CHANGED";
@@ -16,7 +16,7 @@ public class DiffUtilCallback extends DiffUtil.Callback {
     private List<Table> oldList;
     private List<Table> newList;
 
-    public DiffUtilCallback(List<Table> oldList, List<Table> newList) {
+    public TableDiffUtilCallback(List<Table> oldList, List<Table> newList) {
         this.oldList = oldList;
         this.newList = newList;
     }
