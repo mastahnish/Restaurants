@@ -10,8 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.SimpleItemAnimator;
-import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.List;
 import java.util.Objects;
@@ -60,7 +58,13 @@ public class TableActivity extends AppCompatActivity implements TablesAdapter.On
 
         final Observer<List<Reservation>> reservationsObserver =
                 reservations -> {
-
+                    if (reservations != null) {
+                        for (Reservation reservation : reservations){
+                            if(reservation.isCancelled()){
+                               viewModel.updateTable(reservation.getTableId(), true, -1);
+                            }
+                        }
+                    }
                 };
 
         final Observer<List<Table>> tableObserver =

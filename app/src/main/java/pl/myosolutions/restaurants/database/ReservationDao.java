@@ -16,6 +16,9 @@ public interface ReservationDao {
     @Query("SELECT * FROM reservations")
     LiveData<List<Reservation>> getAll();
 
+    @Query("SELECT * FROM reservations WHERE tableId =:tableId AND customerId =:customerId")
+    Reservation getReservationByIdAndCustomerId(int tableId, int customerId);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Reservation reservation);
 
@@ -24,6 +27,12 @@ public interface ReservationDao {
 
     @Query("DELETE FROM reservations")
     int deleteAll();
+
+    @Query("UPDATE reservations SET isCancelled =:isCancelled")
+    int updateAllReservations(boolean isCancelled);
+
+    @Query("UPDATE reservations SET isCancelled =:isCancelled WHERE tableId =:tableId AND customerId =:customerId")
+    int updateReservation(int customerId, int tableId, boolean isCancelled);
 
     @Query("SELECT COUNT(*) FROM reservations")
     int getCount();

@@ -49,42 +49,36 @@ public class AppRepository {
         mReservations = getAllReservations();
     }
 
-    public void getCustomers(boolean isOnline, boolean isForceUpdate) {
+    public void getCustomers(boolean isOnline) {
 
         if (isOnline) {
 
-            if (isForceUpdate) {
+            RestaurantService service = HttpServiceFactory.createRetrofitService(RestaurantService.class, RestaurantAPI.API_BASE_URL);
 
-                RestaurantService service = HttpServiceFactory.createRetrofitService(RestaurantService.class, RestaurantAPI.API_BASE_URL);
+            service.getCustomers()
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<List<Customer>>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                        }
 
-                service.getCustomers()
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<List<Customer>>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-                                Log.d(TAG, "onSubscribe: " + d.toString());
-                            }
+                        @Override
+                        public void onNext(List<Customer> customersResponse) {
+                            insertAllCustomers(customersResponse);
+                        }
 
-                            @Override
-                            public void onNext(List<Customer> customersResponse) {
-                                Log.d(TAG, "onNext: " + customersResponse.toString());
-                                insertAllCustomers(customersResponse);
-                            }
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.e(TAG, "onError: " + e.getMessage());
+                        }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.d(TAG, "onError: " + e.getMessage());
-                            }
+                        @Override
+                        public void onComplete() {
 
-                            @Override
-                            public void onComplete() {
+                        }
+                    });
 
-                            }
-                        });
-
-
-            }
         } else {
             getAllCustomers();
         }
@@ -101,7 +95,6 @@ public class AppRepository {
                     .subscribe(new Observer<List<Boolean>>() {
                         @Override
                         public void onSubscribe(Disposable d) {
-                            Log.d(TAG, "onSubscribe: " + d.toString());
                         }
 
                         @Override
@@ -154,27 +147,34 @@ public class AppRepository {
     }
 
     public void resetReservations() {
-        executor.execute(() -> {
-            mDb.reservationDao().deleteAll();
-            mDb.tableDao().deleteAll();
-        });
+        executor.execute(() -> mDb.reservationDao().updateAllReservations(true));
     }
 
     public void insertReservation(Reservation reservation) {
         executor.execute(() -> {
-            mDb.reservationDao().insert(reservation);
-            mDb.tableDao().updateTable(reservation.getTableId(), false, reservation.getCustomerId());
+            mDb.runInTransaction(() -> {
+                Reservation checkForReservation = mDb.reservationDao().getReservationByIdAndCustomerId(reservation.getTableId(), reservation.getCustomerId());
+
+                if(checkForReservation!=null){
+                    mDb.reservationDao().updateReservation(reservation.getCustomerId(), reservation.getTableId(), false);
+                }else{
+                    mDb.reservationDao().insert(reservation);
+                }
+
+            });
         });
     }
 
-    public void deleteReservation(int tableId) {
-        executor.execute(() -> {
-            mDb.reservationDao().deleteReservation(tableId);
-            mDb.tableDao().updateTable(tableId, true, -1);
-        });
+    public void resetReservation(int tableId, int customerId) {
+        executor.execute(() -> mDb.reservationDao().updateReservation(customerId, tableId, true));
     }
+
+    public void updateTable(int tableId, boolean isVacant, int customerId) {
+        executor.execute(() -> mDb.tableDao().updateTable(tableId, isVacant, customerId));
+    }
+
 
     public LiveData<List<Customer>> processQuery(String text) {
-        return mDb.customerDao().getSearchResult("%"+text+"%");
+        return mDb.customerDao().getSearchResult("%" + text + "%");
     }
 }

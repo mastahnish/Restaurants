@@ -10,8 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -44,12 +42,12 @@ public class MainActivity extends AppCompatActivity implements CustomersAdapter.
         initViews();
         initRecyclerView();
         initViewModel();
-        viewModel.getCustomers(false);
+        viewModel.getCustomers();
     }
 
     private void initViews() {
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.choose_customer);
-        binding.swipeRefresh.setOnRefreshListener(() -> viewModel.getCustomers(true));
+        binding.swipeRefresh.setOnRefreshListener(() -> viewModel.getCustomers());
 
     }
 

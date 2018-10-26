@@ -5,7 +5,6 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.List;
 
@@ -37,7 +36,6 @@ public class TablesViewModel extends AndroidViewModel {
 
 
     public void getTables() {
-        Log.d(TAG, "getTables");
         mRepository.getTables(networkUtils.isConnected());
     }
 
@@ -45,11 +43,13 @@ public class TablesViewModel extends AndroidViewModel {
         int tableId = table.getId();
 
         if (table.isVacant()) {
-            mRepository.insertReservation(new Reservation(customerId, tableId));
+            mRepository.insertReservation(new Reservation(customerId, tableId, false));
+            mRepository.updateTable(tableId, false, customerId);
             notification.setValue(R.string.reservation_success);
 
         } else if (table.getCustomerId() == customerId) {
-            mRepository.deleteReservation(tableId);
+            mRepository.resetReservation(tableId, customerId);
+            mRepository.updateTable(tableId, true, -1);
             notification.setValue(R.string.reservation_cancelled);
 
         } else {
@@ -64,4 +64,7 @@ public class TablesViewModel extends AndroidViewModel {
         mCurrentCustomer = mRepository.getCustomerById(id);
     }
 
+    public void updateTable(int tableId, boolean isVacant, int customerId) {
+        mRepository.updateTable(tableId, isVacant, customerId);
+    }
 }

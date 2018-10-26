@@ -28,14 +28,14 @@ public class CustomersViewModel extends AndroidViewModel {
         mCustomers = mRepository.mCustomers;
     }
 
-    public void getCustomers(boolean isForceUpdate){
+    public void getCustomers(){
         boolean isOnline = networkUtils.isConnected();
 
-        if(isForceUpdate && !isOnline){
+        if(!isOnline){
             notification.setValue(R.string.no_internet);
         }
 
-        mRepository.getCustomers(isOnline, isForceUpdate);
+        mRepository.getCustomers(isOnline);
     }
 
     public LiveData<List<Customer>> processQuery(String newText) {

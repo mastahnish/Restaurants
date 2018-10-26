@@ -11,7 +11,7 @@ public class Reservation {
     private int id;
     private int customerId;
     private int tableId;
-    private boolean isCancelled;
+    private boolean isCancelled ;
 
     public Reservation(int id, int customerId, int tableId, boolean isCancelled) {
         this.id = id;
@@ -22,9 +22,10 @@ public class Reservation {
 
 
     @Ignore
-    public Reservation(int customerId, int tableId) {
+    public Reservation(int customerId, int tableId, boolean isCancelled) {
         this.customerId = customerId;
         this.tableId = tableId;
+        this.isCancelled = isCancelled;
     }
 
     public boolean isCancelled() {
