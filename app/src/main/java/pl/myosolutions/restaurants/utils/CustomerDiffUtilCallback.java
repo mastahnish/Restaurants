@@ -36,8 +36,8 @@ public class CustomerDiffUtilCallback extends DiffUtil.Callback {
 
         Customer oldCustomer = oldList.get(oldItemPosition);
         Customer newCustomer = newList.get(newItemPosition);
-        return (oldCustomer.getCustomerFirstName() == newCustomer.getCustomerFirstName()
-                && oldCustomer.getCustomerLastName() == newCustomer.getCustomerLastName()
+        return (oldCustomer.getCustomerFirstName().equals(newCustomer.getCustomerFirstName())
+                && oldCustomer.getCustomerLastName().equals(newCustomer.getCustomerLastName())
                 && oldCustomer.getId() == newCustomer.getId() );
     }
 
