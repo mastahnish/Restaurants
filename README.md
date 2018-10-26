@@ -23,9 +23,9 @@ URL to customers list: https://s3-eu-west-1.amazonaws.com/quandoo-assessment/cus
 URL to tables list: https://s3-eu-west-1.amazonaws.com/quandoo-assessment/table-map.json
 
 
-Requirement:
-1. Tables have to be represented as cells on grid
-2. Available and unavailable tables have to be easily recognized
-3. The app has to also work offline
-4. Search option for customers would be a plus
-5. Any unspecified details are left to your imagination
+Features:
+1. Tables are represented as cells on grid
+2. Available and unavailable tables are easily recognized
+3. The app works offline
+4. Search option for customers 
+
