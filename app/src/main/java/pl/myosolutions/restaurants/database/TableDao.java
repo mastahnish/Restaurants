@@ -28,6 +28,9 @@ public interface TableDao {
     @Query("UPDATE tables SET isVacant = :isVacant, customerId = :customerId WHERE id = :tableId")
     void updateTable(int tableId, boolean isVacant, int customerId);
 
+    @Query("UPDATE tables SET isVacant = :isVacant")
+    void updateAllTables(boolean isVacant);
+
     @Query("DELETE FROM tables")
     int deleteAll();
 

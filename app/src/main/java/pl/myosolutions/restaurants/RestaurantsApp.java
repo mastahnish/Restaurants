@@ -25,7 +25,7 @@ public class RestaurantsApp extends Application {
                 this.getApplicationContext(), 1, intent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         if (alarmManager != null) {
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,  SystemClock.elapsedRealtime() + intervalTime , intervalTime, pendingIntent);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis() + intervalTime , intervalTime, pendingIntent);
         }
 
     }

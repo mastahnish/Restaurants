@@ -148,12 +148,11 @@ public class AppRepository {
                 if(reservationsToReset!=null){
                     for(Reservation reservation : reservationsToReset){
                         mDb.reservationDao().updateReservation(reservation.getCustomerId(), reservation.getTableId(), true);
-                        mDb.tableDao().updateTable(reservation.getTableId(), true, -1);
                     }
                 }
+
+                mDb.tableDao().updateAllTables(true);
             });
-
-
         });
     }
 
